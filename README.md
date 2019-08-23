@@ -1,2 +1,2 @@
 # spring-boot-learning-demo
-demo for learning springbbot
+demo for learning springboot
