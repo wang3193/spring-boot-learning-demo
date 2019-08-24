@@ -1,0 +1,19 @@
+server:
+    prot: 8080
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    #driver-class-name: org.hsqldb.jdbc.JDBCDriver
+    url: jdbc:mysql://127.0.0.1:3306/demo
+    username: root
+    password: root
+    hikari:
+      connection-timeout: 3000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 10
+      pool-name: hikari
+      register-mbeans: false
