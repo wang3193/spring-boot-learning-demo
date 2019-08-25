@@ -3,10 +3,7 @@ package com.samwang.controller.sys;
 import com.samwang.service.sys.SysService;
 import com.samwang.sys.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,5 +32,10 @@ public class SysController {
         User user = new User();
         user.setName("test");
         return sysService.save(user);
+    }
+
+    @GetMapping("/get/{id}")
+    public User get(@PathVariable Long id){
+        return sysService.get(id);
     }
 }

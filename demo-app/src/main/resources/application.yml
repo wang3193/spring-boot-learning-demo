@@ -2,15 +2,14 @@ server:
     prot: 8080
 spring:
   jpa:
-    show-sql: true
+    show-sql: true #是否显示sql
     hibernate:
-      ddl-auto: update
+      ddl-auto: update #自动表生成策略
   datasource:
-    #driver-class-name: org.hsqldb.jdbc.JDBCDriver
     url: jdbc:mysql://127.0.0.1:3306/demo
     username: root
     password: root
-    hikari:
+    hikari: #使用hikari连接池
       connection-timeout: 3000
       idle-timeout: 600000
       max-lifetime: 1800000

@@ -1,5 +1,7 @@
 package com.samwang.service.sys;
 
+import com.querydsl.core.BooleanBuilder;
+import com.samwang.sys.QUser;
 import com.samwang.sys.User;
 import com.samwang.sys.rep.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +24,8 @@ public class SysService {
         return userRepository.findAll();
     }
 
+    public User get(Long id){
+        return userRepository.findOne(new BooleanBuilder().and(QUser.user.id.eq(id))).get();
+    }
 
 }
