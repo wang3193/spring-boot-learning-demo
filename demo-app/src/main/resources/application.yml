@@ -16,3 +16,10 @@ spring:
       maximum-pool-size: 10
       pool-name: hikari
       register-mbeans: false
+web:
+  user-name: aaa
+  password: bbb
+  map:
+    k1: v1
+    k2: v2
+  list: 1,2,3

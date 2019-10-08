@@ -1,5 +1,7 @@
 package com.samwang.test;
 
+import com.samwang.conf.Configure;
+import com.samwang.conf.WebConfigure;
 import com.samwang.service.sys.SysService;
 import com.samwang.sys.User;
 import org.junit.jupiter.api.DisplayName;
@@ -21,14 +23,30 @@ public class TestDemo {
     @Autowired
     private SysService sysService;
 
+    @Autowired
+    private Configure configure;
+
+    @Autowired
+    private WebConfigure webConfigure;
+
     @Test
     @DisplayName("Add user")
     public void test(){
-        User user = new User();
-        user.setName("FromJunit");
-        User newOne = sysService.save(user);
-        assertAll("Insert User Success.",
-                () -> assertNotNull(newOne),
-                () -> assertNotNull(newOne.getId()));
+//        User user = new User();
+//        user.setName("FromJunit");
+//        User newOne = sysService.save(user);
+//        assertAll("Insert User Success.",
+//                () -> assertNotNull(newOne),
+//                () -> assertNotNull(newOne.getId()));
+    }
+
+    @Test
+    public void test1(){
+        System.out.println(configure.toString());
+    }
+
+    @Test
+    public void test2(){
+        System.out.println(webConfigure.toString());
     }
 }
