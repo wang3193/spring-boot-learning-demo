@@ -31,10 +31,6 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
             <!--添加QueryDSL插件支持-->
             <plugin>
                 <groupId>com.mysema.maven</groupId>
