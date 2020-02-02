@@ -6,7 +6,7 @@ spring:
     hibernate:
       ddl-auto: update #自动表生成策略
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/demo
+    url: jdbc:mysql://127.0.0.1:3306/demo1
     username: root
     password: root
     hikari: #使用hikari连接池
