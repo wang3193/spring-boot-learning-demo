@@ -1,7 +1,9 @@
 package com.samwang.multiThread;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -15,7 +17,9 @@ public class MulitiJob {
 //        job.testCyclicBarrier();
 //        job.testCompletionService();
 //        job.testCompletableFuture();
-        job.futureTest();
+//        job.futureTest();
+//        job.testForkJoin();
+        job.testForkJoinSort();
     }
 
     public void testCountDownLatch() {
@@ -132,5 +136,111 @@ public class MulitiJob {
         System.out.println("future1: " + future1.isDone() + " future2: " + future2.isDone());
     }
 
+    public void testForkJoin(){
+        double numbers[] = new double[1000];
+        for(int i =  0; i < 1000; i++) {
+            numbers[i] = i+1;
+        }
+        ForkJoinDemo demo = new ForkJoinDemo(numbers);
+        FORK_JOIN_POOL.invoke(demo);
+        System.out.println("END:"+demo.join());
+    }
+
+    public void testForkJoinSort() {
+        int numbers[] = new int[1000];
+        for(int i = 0; i < 1000; i++) {
+            numbers[i] = new Random().nextInt();
+        }
+//        System.out.println(numbers.length);
+        System.out.println(Arrays.toString(numbers));
+        ForkJoinSort sort = new ForkJoinSort(numbers);
+        FORK_JOIN_POOL.invoke(sort);
+//        System.out.println(sort.join().length);
+        System.out.println("END:"+Arrays.toString(sort.join()));
+    }
+
 }
 
+class ForkJoinDemo extends RecursiveTask<Double>{
+
+    //分界线，当一个数组的长度 < 1000 就不再继续拆分
+    public static final int THRESHOLD = 100;
+    //数组
+    private double[] values;
+
+    public ForkJoinDemo(double[] values) {
+        this.values = values;
+    }
+
+    @Override
+    protected Double compute() {
+        if(values.length < THRESHOLD) {
+            double r = 0d;
+            for(Double d : values) {
+                r += d;
+            }
+            System.out.println("result:"+ r);
+            return r;
+        } else {
+            int mid = values.length/2;
+            ForkJoinDemo first = new ForkJoinDemo(Arrays.copyOfRange(values, 0, mid));
+            first.fork();
+            ForkJoinDemo second = new ForkJoinDemo(Arrays.copyOfRange(values, mid, values.length));
+            Double result = second.compute();
+            Double join = first.join();
+            return join + result;
+        }
+    }
+}
+
+class ForkJoinSort extends RecursiveTask<int[]> {
+
+    //分界线，当一个数组的长度 < 1000 就不再继续拆分
+    public static final int THRESHOLD = 100;
+
+    private int[] values;
+
+    public ForkJoinSort (int[] values) {
+        this.values = values;
+    }
+
+    @Override
+    protected int[] compute() {
+        if(values.length < THRESHOLD) {
+            int[] ints = Arrays.stream(values).sorted().toArray();
+            return ints;
+        }else {
+            int mid = values.length / 2;
+            ForkJoinSort first = new ForkJoinSort(Arrays.copyOfRange(values, 0, mid));
+            first.fork();
+            ForkJoinSort second = new ForkJoinSort(Arrays.copyOfRange(values, mid, values.length));
+            int[] secondResult = second.compute();
+            int[] firstResult = first.join();
+            //两个数组混合排序
+            int[] combineRsult = combineIntArray(firstResult,secondResult);
+            return combineRsult;
+        }
+    }
+
+    private int[] combineIntArray(int[] a1, int[] a2) {
+        int result[] = new int[a1.length + a2.length];
+        int a1Len = a1.length;
+        int a2Len = a2.length;
+        int destLen = result.length;
+
+        for(int index = 0, a1Index = 0, a2Index = 0; index < destLen; index++) {
+            int v1 = a1Index >= a1Len?Integer.MAX_VALUE: a1[a1Index];
+            int v2 = a2Index >= a2Len?Integer.MAX_VALUE: a2[a2Index];
+            if(v1 < v2) {
+                a1Index++;
+                result[index] = v1;
+            }else {
+                a2Index++;
+                result[index] = v2;
+            }
+        }
+
+        return result;
+
+    }
+}
